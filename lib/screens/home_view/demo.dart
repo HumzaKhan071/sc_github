@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_unity_widget/flutter_unity_widget.dart';
+import 'package:get/route_manager.dart';
+import 'package:scisphere/screens/home_view/home_page.dart';
 
 class DemoPage extends StatelessWidget {
   DemoPage({super.key});
@@ -41,10 +43,7 @@ class DemoPage extends StatelessWidget {
             children: [
               UnityWidget(
                 onUnityCreated: onUnityCreated,
-                onUnitySceneLoaded: (sceneName) {
-                  changeCurrentLevel("2");
-                },
-                //  onUnityMessage: onUnityMessage,
+                onUnityMessage: onUnityMessage,
               ),
               Positioned(
                 bottom: 20,
@@ -57,7 +56,10 @@ class DemoPage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        OutlinedButton.icon(onPressed: () => changeCurrentLevel("2"), icon: const Icon(Icons.arrow_back_rounded), label: const Text("Level 1")),
+                        OutlinedButton.icon(
+                            onPressed: () => changeCurrentLevel("2"),
+                            icon: const Icon(Icons.arrow_back_rounded),
+                            label: const Text("Level 1")),
                         //OutlinedButton.icon(onPressed: () => changeCurrentLevel("Level2"), icon: const Icon(Icons.arrow_forward_rounded), label: const Text("Level 2")),
                       ],
                     ),
@@ -71,6 +73,17 @@ class DemoPage extends StatelessWidget {
 
   void onUnityCreated(controller) {
     _unityWidgetController = controller;
+  }
+
+  void onUnityMessage(dynamic msg) {
+    print("Received message from unity: ${msg.toString()}");
+
+    if (msg.toString() == "exit") {
+      Get.offAll(() => HomePage());
+    }
+
+    // Call back to home method if msg is "exit"
+    // Add Logic here
   }
 
   changeCurrentLevel(String levelName) {
